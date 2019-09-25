@@ -1,9 +1,9 @@
 extern crate reqwest;
-extern crate scraper;
+extern crate serde;
 
 use clap::{App, AppSettings, SubCommand};
 
-mod http;
+mod remote;
 
 fn main() {
     let matches = App::new("arc")
@@ -15,7 +15,7 @@ fn main() {
 
     match matches.subcommand() {
         ("ls-remote", Some(_)) => {
-            http::fetch_version_list("https://nodejs.org/dist").unwrap();
+            remote::ls("https://nodejs.org/dist").unwrap();
         }
         _ => unreachable!(),
     }
