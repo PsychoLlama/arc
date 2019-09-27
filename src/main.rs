@@ -14,9 +14,7 @@ fn main() {
         .get_matches();
 
     match matches.subcommand() {
-        ("ls-remote", Some(_)) => {
-            remote::ls().unwrap();
-        }
+        ("ls-remote", Some(_)) => remote::ls(),
         _ => unreachable!(),
     }
 }

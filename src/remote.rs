@@ -10,13 +10,25 @@ struct Distribution {
     date: String,
 }
 
-pub fn ls() -> Result<(), reqwest::Error> {
+pub fn ls() {
     match fetch_version_list() {
         Ok(distributions) => display_version_list(distributions),
-        Err(error) => println!("Error: {:?}", error),
+        Err(_) => std::process::exit(1),
     };
+}
 
-    Ok(())
+fn fetch_version_list() -> Result<Vec<Distribution>, reqwest::Error> {
+    let url = get_mirror() + "/index.json";
+
+    let client = reqwest::Client::new();
+    let version_list: Vec<Distribution> = client
+        .get(&url)
+        .send()
+        .or_else(describe_request_failure)?
+        .json()
+        .or_else(describe_json_parse_failure)?;
+
+    Ok(version_list)
 }
 
 fn display_version_list(distributions: Vec<Distribution>) {
@@ -25,13 +37,16 @@ fn display_version_list(distributions: Vec<Distribution>) {
     }
 }
 
-fn fetch_version_list() -> Result<Vec<Distribution>, reqwest::Error> {
-    let client = reqwest::Client::new();
-    let url = get_mirror() + "/index.json";
+fn describe_request_failure(error: reqwest::Error) -> Result<reqwest::Response, reqwest::Error> {
+    println!("Couldn't fetch remote versions ({}):", get_mirror());
+    println!("{}", error);
+    Err(error)
+}
 
-    let version_list: Vec<Distribution> = client.get(&url).send()?.json()?;
-
-    Ok(version_list)
+fn describe_json_parse_failure<Json>(error: reqwest::Error) -> Result<Json, reqwest::Error> {
+    println!("Node.js mirror returned invalid JSON.");
+    println!("{}", error);
+    Err(error)
 }
 
 fn get_mirror() -> String {
