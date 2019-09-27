@@ -15,7 +15,7 @@ fn main() {
 
     match matches.subcommand() {
         ("ls-remote", Some(_)) => {
-            remote::ls("https://nodejs.org/dist").unwrap();
+            remote::ls().unwrap();
         }
         _ => unreachable!(),
     }
