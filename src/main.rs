@@ -1,4 +1,5 @@
 extern crate reqwest;
+extern crate semver;
 extern crate serde;
 
 use clap::{App, AppSettings, SubCommand};
