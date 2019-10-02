@@ -28,10 +28,7 @@ pub fn ls() {
 fn fetch_version_list() -> Result<Vec<Distribution>, reqwest::Error> {
     let url = get_mirror() + "/index.json";
 
-    let client = reqwest::Client::new();
-    let mut version_list: Vec<Distribution> = client
-        .get(&url)
-        .send()
+    let mut version_list: Vec<Distribution> = reqwest::get(&url)
         .or_else(describe_request_failure)?
         .json::<Vec<Listing>>()
         .or_else(describe_json_parse_failure)?
