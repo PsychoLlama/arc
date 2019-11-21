@@ -12,7 +12,7 @@ struct Listing {
     date: String,
 }
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub struct Distribution {
     pub version: Version,
     pub date: String,

@@ -4,8 +4,9 @@ extern crate serde;
 
 use clap::{App, AppSettings, SubCommand};
 
-mod remote;
 mod mirror;
+mod remote;
+mod version;
 
 fn main() {
     let matches = App::new("arc")
